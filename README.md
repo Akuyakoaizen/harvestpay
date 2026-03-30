@@ -1,235 +1,265 @@
-# 🌾 HarvestPay
+# Submit on Rise In Requirements
 
-> A Soroban escrow smart contract on Stellar that releases USDC payments to farmers instantly when a cooperative confirms harvest delivery on-chain.
+> Submit the following on your Rise In program page:
 
----
-
-## 📋 Project Overview
-
-**PROJECT NAME:** HarvestPay
-
-**PROBLEM:** Small rice and corn farmers in the Philippines wait 30–90 days for cooperative payments after harvest delivery, forcing them into predatory loan cycles.
-
-**SOLUTION:** A Soroban escrow dApp that releases USDC payments to farmers automatically when a cooperative officer confirms delivery on-chain — no banks, no waiting, no middlemen.
+| Field | What to Submit |
+|-------|----------------|
+| **GitHub Repository** | https://github.com/Akuyakoaizen/harvestpay |
+| **Contract ID** | GCDKOBK5STRM6RL334VULNCDMYRQI6YQFJA4U7A42MM3HLFXMQOYQVBJ |
+| **Stellar Expert Link** | `https://stellar.expert/explorer/testnet/account/GCDKOBK5STRM6RL334VULNCDMYRQI6YQFJA4U7A42MM3HLFXMQOYQVBJ` |
+| **Short Description** | A Soroban smart contract on Stellar that automates USDC payouts to farmers when a cooperative confirms harvest delivery on-chain. |
 
 ---
 
-## 🌟 Stellar Features Used
+# Stellar Expert ScreenShot
 
-- ✅ **Soroban Smart Contract** — core escrow and payment release logic
-- ✅ **USDC Transfer** — stablecoin payment to farmer wallet
-- ✅ **Trustline** — farmer wallet accepts USDC
-- ✅ **Clawback/Compliance** — cooperative authorization enforcement
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/017981ab-01a6-4859-9642-e386ab55e0d3" />
 
 ---
 
-## 🎯 Target Users
+## The Problem
 
-Smallholder farmers in Luzon (Philippines) and the Mekong Delta (Vietnam) — people with basic smartphones but no bank accounts, who depend on cooperatives for crop payments.
-
----
-
-## ⚙️ Core MVP Feature
-
-Farmer submits harvest weight on-chain → Cooperative officer signs confirmation → Soroban contract releases USDC instantly to farmer's wallet.
+Small-scale farmers in Southeast Asia often experience delayed payments and high remittance fees when selling harvest to cooperatives or marketplaces. Manual verification and slow payment processing cause cash flow issues for farmers and inefficiencies for cooperatives.
 
 ---
 
-## 📁 Repository Structure
+## The Solution
+
+**HarvestPay** automates harvest submissions, confirmations, and payouts on Stellar Soroban. Farmers submit harvest details on-chain. When a cooperative confirms delivery, the contract instantly releases the agreed USDC payment to the farmer’s wallet, ensuring transparency, speed, and trustless disbursement.
+
+---
+
+## Stellar Features Used
+
+| Feature | Role in HarvestPay |
+|---------|-------------------|
+| Soroban smart contracts | Manage harvest submissions, confirmations, and automated payouts |
+| USDC (custom token) | Transfers payment to farmers securely |
+| Trustlines | Farmer wallets opt-in to receive USDC |
+| Contract storage | Stores harvest records and cooperative info |
+
+---
+
+## Target Users
+
+| Segment | Location | Pain / Incentive |
+|---------|---------|-----------------|
+| Small-scale farmers | SEA (Philippines, Indonesia, Vietnam) | Receive instant, verifiable payments for delivered harvest |
+| Cooperatives | SEA | Automate verification and reduce administrative overhead |
+| Agri-platforms / marketplaces | Global | Ensure transparent and traceable farmer payouts |
+
+---
+
+## MVP Core Feature — Transaction Flow
 
 ```
-harvestpay/
-├── contracts/
-│   └── hello-world/
-│       ├── src/
-│       │   ├── lib.rs        ← Smart contract logic
-│       │   └── test.rs       ← Unit tests (3 tests)
-│       ├── Cargo.toml        ← Contract dependencies
-│       └── Makefile
-├── Cargo.toml                ← Workspace config
-├── Cargo.lock
-└── README.md
+Cooperative calls initialize(cooperative_address)
+→ Sets cooperative in contract storage
+Farmer calls submit_harvest(farmer_address, weight_kg, amount_usdc)
+→ HarvestRecord stored on-chain with status Pending
+→ HARVEST event emitted
+Cooperative calls confirm_and_pay(cooperative_address)
+→ Contract verifies cooperative auth
+→ HarvestRecord status updated to Paid
+→ USDC transferred to farmer wallet
+→ PAYMENT event emitted
+Anyone calls get_harvest()
+→ Returns current HarvestRecord
+Anyone calls get_cooperative()
+→ Returns cooperative address
 ```
 
----
 
-## 🔧 Prerequisites
-
-Before building or deploying, make sure you have:
-
-- **Rust** toolchain (v1.70+)
-  ```bash
-  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-  ```
-
-- **WASM target** for Rust
-  ```bash
-  rustup target add wasm32-unknown-unknown
-  ```
-
-- **Stellar CLI** (v25.0+)
-  ```bash
-  cargo install --locked stellar-cli
-  ```
-
-- **Freighter Wallet** browser extension — set to Testnet
-  - Download: https://freighter.app
+Demo-able end-to-end in under 2 minutes.
 
 ---
 
-## 🏗️ How to Build
+## Why This Wins
+
+HarvestPay directly addresses slow and opaque agricultural payments. It demonstrates live USDC transfers, cooperative-controlled confirmation, automatic status updates, and an on-chain audit trail — all in one demo. Judges see an instantly functional Soroban contract with real-world impact.
+
+---
+
+## Optional Edge (Bonus)
+
+- Multi-harvest support per farmer  
+- Automated off-chain notifications when harvest is confirmed  
+- Analytics dashboard for cooperative tracking  
+
+---
+
+## Suggested MVP Timeline
+
+| Day | Milestone |
+|-----|-----------|
+| 1   | Write lib.rs: HarvestRecord, HarvestStatus, submit_harvest, confirm_and_pay |
+| 2   | Add initialize, get_harvest, get_cooperative; write unit tests |
+| 3   | Build and test contract locally |
+| 4   | Deploy to Stellar testnet |
+| 5   | Write CLI scripts for farmer and cooperative interactions |
+| 6   | Optional: Next.js frontend with farmer dashboard and cooperative panel |
+| 7   | Record demo, polish README, submit |
+
+---
+
+## Prerequisites
+
+| Tool | Version |
+|------|---------|
+| Rust toolchain | stable >= 1.85 |
+| wasm32-unknown-unknown target | rustup target add wasm32-unknown-unknown |
+| Soroban CLI | cargo install --locked soroban-cli |
+| Node.js (frontend) | >= 18 LTS |
+
+---
+
+## Build
 
 ```bash
+export RUSTFLAGS="-C target-feature=-reference-types"
 cargo build --target wasm32-unknown-unknown --release
 ```
 
-Confirm the compiled WASM file exists:
-
-```bash
-ls target/wasm32-unknown-unknown/release/*.wasm
-```
-
 ---
 
-## 🧪 How to Test
+## Test
 
 ```bash
 cargo test
 ```
 
 Expected output:
+
 ```
-running 3 tests
 test test::test_initialize ... ok
 test test::test_submit_harvest ... ok
 test test::test_confirm_and_pay ... ok
-test result: ok. 3 passed; 0 failed
+
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
 ```
-
-### Test Descriptions
-
-| Test | Type | Description |
-|------|------|-------------|
-| `test_initialize` | Happy path | Cooperative address is correctly stored on-chain |
-| `test_submit_harvest` | State verification | Farmer data (weight, amount, status) is correctly recorded |
-| `test_confirm_and_pay` | Edge case | Only the registered cooperative can confirm; status updates to Paid |
 
 ---
 
-## 🚀 How to Deploy to Testnet
+## Deploy to Testnet
 
-**Step 1 — Create an identity:**
 ```bash
-stellar keys generate --global my-key --network testnet
-stellar keys address my-key
-```
+# 1. Configure testnet
+soroban config network testnet https://rpc.testnet.stellar.org
 
-**Step 2 — Fund your testnet account:**
-```bash
-stellar keys fund my-key --network testnet
-```
-
-**Step 3 — Deploy the contract:**
-```bash
-stellar contract deploy \
-  --wasm target/wasm32-unknown-unknown/release/hello_world.wasm \
-  --source my-key \
+# 2. Deploy contract
+soroban contract deploy \
+  --wasm target/wasm32-unknown-unknown/release/harvestpay.wasm \
+  --source YOUR_SECRET_KEY \
   --network testnet
-```
 
-Copy the **Contract ID** from the output (starts with `C...`).
-
-**Step 4 — Verify on Stellar Expert:**
-```
-https://stellar.expert/explorer/testnet/contract/<YOUR_CONTRACT_ID>
-```
-
----
-
-## 💻 Sample CLI Invocations
-
-**Initialize the contract (register cooperative):**
-```bash
-stellar contract invoke \
-  --id <CONTRACT_ID> \
-  --source my-key \
+# 3. Initialize cooperative
+soroban contract invoke \
+  --id $CONTRACT_ID \
+  --source YOUR_SECRET_KEY \
   --network testnet \
   -- initialize \
-  --cooperative GCDKOBK5STRM6RL334VULNCDMYRQI6YQFJA4U7A42MM3HLFXMQOYQVBJ
+  --cooperative $COOPERATIVE_ADDRESS
 ```
 
-**Submit a harvest (as farmer):**
+---
+
+## Sample CLI Invocations
+
+### Enroll a Student
+
 ```bash
 stellar contract invoke \
-  --id <CONTRACT_ID> \
-  --source my-key \
+  --id $CONTRACT_ID \
+  --source admin_keypair \
+  --network testnet \
+  -- enroll_student \
+  --admin           GADMIN...ADDRESS \
+  --student         GSTUDENT...ADDRESS \
+  --milestone_count 3
+```
+
+### Sponsor Deposits Funds
+
+```bash
+stellar contract invoke \
+  --id $CONTRACT_ID \
+  --source sponsor_keypair \
+  --network testnet \
+  -- deposit_funds \
+  --sponsor  GSPONSOR...ADDRESS \
+  --token    $XLM_TOKEN_ADDRESS \
+  --student  GSTUDENT...ADDRESS \
+  --amount   3000000000
+```
+
+### submit harvest
+
+```bash
+soroban contract invoke \
+  --id $CONTRACT_ID \
+  --source FARMER_KEY \
   --network testnet \
   -- submit_harvest \
-  --farmer GCDKOBK5STRM6RL334VULNCDMYRQI6YQFJA4U7A42MM3HLFXMQOYQVBJ \
+  --farmer  GFARMER...ADDRESS \
   --weight_kg 500 \
   --amount_usdc 1000
 ```
 
-**Confirm delivery and release payment (as cooperative):**
+### confirm and pay
+
 ```bash
-stellar contract invoke \
-  --id <CONTRACT_ID> \
-  --source my-key \
+soroban contract invoke \
+  --id $CONTRACT_ID \
+  --source COOP_KEY \
   --network testnet \
   -- confirm_and_pay \
-  --cooperative GCDKOBK5STRM6RL334VULNCDMYRQI6YQFJA4U7A42MM3HLFXMQOYQVBJ
+  --cooperative GCOOP...ADDRESS
 ```
 
-**View current harvest record:**
+### Send a Cross-Border Micropayment
+
 ```bash
 stellar contract invoke \
-  --id <CONTRACT_ID> \
-  --source my-key \
+  --id $CONTRACT_ID \
+  --source sponsor_keypair \
+  --network testnet \
+  -- send_remittance \
+  --sender    GSPONSOR...ADDRESS \
+  --token     $XLM_TOKEN_ADDRESS \
+  --receiver  GSTUDENT...ADDRESS \
+  --amount    50000000 \
+  --remit_id  "INV-2025-SUB-001"
+```
+
+### get harvest record
+
+```bash
+soroban contract invoke \
+  --id $CONTRACT_ID \
+  --source ANY_KEY \
   --network testnet \
   -- get_harvest
 ```
+### get cooperative address
+
+```bash
+soroban contract invoke \
+  --id $CONTRACT_ID \
+  --source ANY_KEY \
+  --network testnet \
+  -- get_cooperative
+```
 
 ---
 
-## 🌐 Deployed Contract
+## Reference Repos
 
-| Field | Value |
-|-------|-------|
-| **Network** | Stellar Testnet |
-| **Contract ID** | `CAIGDOMMMVKQIF2TU2XYEKIPLZVMHAPWQYM3GCSNYHK4TJCJROQ6RXRO` |
-| **Stellar Expert** | [View Contract](https://stellar.expert/explorer/testnet/contract/CAIGDOMMMVKQIF2TU2XYEKIPLZVMHAPWQYM3GCSNYHK4TJCJROQ6RXRO) |
-| **Frontend** | Next.js + Tailwind + Freighter Wallet |
+Stellar Bootcamp 2026: https://github.com/armlynobinguar/Stellar-Bootcamp-2026
+HarvestPay full example: https://github.com/Akuyakoaizen/harvestpay
 
 ---
 
-## 📅 Suggested MVP Timeline
+## License
 
-| Phase | Duration | Description |
-|-------|----------|-------------|
-| Setup & Environment | 1 day | Install Rust, Stellar CLI, Freighter |
-| Smart Contract | 2 days | Write and test Soroban contract |
-| Deploy to Testnet | 1 day | Deploy and verify on Stellar Expert |
-| Frontend | 2 days | Next.js UI with Freighter integration |
-| Testing & Polish | 1 day | End-to-end testing and README |
-
----
-
-## 🇵🇭 About
-
-Built during the **Stellar Philippines UniTour — University of East Caloocan** bootcamp, powered by [Rise In](https://risein.com).
-
-This project demonstrates how Soroban smart contracts on Stellar can solve real-world payment problems for underserved agricultural communities in Southeast Asia.
-
----
-
-## 📄 License
-
-MIT License
-
-Copyright (c) 2026 HarvestPay
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+MIT (c) 2026 HarvestPay Contributors
