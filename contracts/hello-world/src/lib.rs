@@ -26,6 +26,7 @@ pub struct HarvestPayContract;
 
 #[contractimpl]
 impl HarvestPayContract {
+
     pub fn initialize(env: Env, cooperative: Address) {
         env.storage().instance().set(&COOP, &cooperative);
     }
