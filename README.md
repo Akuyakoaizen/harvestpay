@@ -13,7 +13,7 @@
 
 # Stellar Expert ScreenShot
 
-<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/017981ab-01a6-4859-9642-e386ab55e0d3" />
+<img width="1366" height="768" alt="HarvestPay Screenshot" src="contracts/assets/stellar.png" />
 
 ---
 
